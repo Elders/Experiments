@@ -1,0 +1,6 @@
+D:\Projects\Experiments\Experiments\bin\Debug\Experiments.exe.config
+D:\Projects\Experiments\Experiments\bin\Debug\Experiments.exe
+D:\Projects\Experiments\Experiments\bin\Debug\Experiments.pdb
+D:\Projects\Experiments\Experiments\obj\Debug\Experiments.exe
+D:\Projects\Experiments\Experiments\obj\Debug\Experiments.pdb
+D:\Projects\Experiments\Experiments\obj\Debug\Experiments.csprojResolveAssemblyReference.cache

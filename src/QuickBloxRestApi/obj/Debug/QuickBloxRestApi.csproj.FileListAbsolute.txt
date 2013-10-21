@@ -1,0 +1,5 @@
+D:\Projects\Experiments\QuickBloxRestApi\bin\Debug\QuickBloxRestApi.exe.config
+D:\Projects\Experiments\QuickBloxRestApi\bin\Debug\QuickBloxRestApi.exe
+D:\Projects\Experiments\QuickBloxRestApi\bin\Debug\QuickBloxRestApi.pdb
+D:\Projects\Experiments\QuickBloxRestApi\obj\Debug\QuickBloxRestApi.exe
+D:\Projects\Experiments\QuickBloxRestApi\obj\Debug\QuickBloxRestApi.pdb

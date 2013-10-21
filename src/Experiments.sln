@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments", "Experiments\Experiments.csproj", "{57DF6A51-D28E-4FF0-B0C3-4D4717171304}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickBloxRestApi", "QuickBloxRestApi\QuickBloxRestApi.csproj", "{8E9264AC-160A-44AB-B2EF-3158E35412A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net", "log4net\log4net.csproj", "{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57DF6A51-D28E-4FF0-B0C3-4D4717171304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57DF6A51-D28E-4FF0-B0C3-4D4717171304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57DF6A51-D28E-4FF0-B0C3-4D4717171304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57DF6A51-D28E-4FF0-B0C3-4D4717171304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E9264AC-160A-44AB-B2EF-3158E35412A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E9264AC-160A-44AB-B2EF-3158E35412A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E9264AC-160A-44AB-B2EF-3158E35412A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E9264AC-160A-44AB-B2EF-3158E35412A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
