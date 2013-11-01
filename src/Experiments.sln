@@ -1,11 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments", "Experiments\Experiments.csproj", "{57DF6A51-D28E-4FF0-B0C3-4D4717171304}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickBloxRestApi", "QuickBloxRestApi\QuickBloxRestApi.csproj", "{8E9264AC-160A-44AB-B2EF-3158E35412A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net", "log4net\log4net.csproj", "{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadonlyCollections", "ReadonlyCollections\ReadonlyCollections.csproj", "{E02BACCB-8F56-44FB-BF31-AD6DDC7F54EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCleanup", "CodeCleanup\CodeCleanup.csproj", "{BB9BC315-C793-4CCD-A54E-B8586ED1D679}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendEmail", "SendEmail\SendEmail.csproj", "{414C398D-6F5B-44F5-A34A-21DD5F083E33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernateExperiments", "NHibernate\NHibernateExperiments.csproj", "{49FD674E-C9C3-4558-A6F5-F3043C9DE8E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +35,22 @@ Global
 		{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FBC8B51-EE93-40F7-BECD-4EB576BE522C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E02BACCB-8F56-44FB-BF31-AD6DDC7F54EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E02BACCB-8F56-44FB-BF31-AD6DDC7F54EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E02BACCB-8F56-44FB-BF31-AD6DDC7F54EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E02BACCB-8F56-44FB-BF31-AD6DDC7F54EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB9BC315-C793-4CCD-A54E-B8586ED1D679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB9BC315-C793-4CCD-A54E-B8586ED1D679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB9BC315-C793-4CCD-A54E-B8586ED1D679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB9BC315-C793-4CCD-A54E-B8586ED1D679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{414C398D-6F5B-44F5-A34A-21DD5F083E33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{414C398D-6F5B-44F5-A34A-21DD5F083E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{414C398D-6F5B-44F5-A34A-21DD5F083E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{414C398D-6F5B-44F5-A34A-21DD5F083E33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49FD674E-C9C3-4558-A6F5-F3043C9DE8E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49FD674E-C9C3-4558-A6F5-F3043C9DE8E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49FD674E-C9C3-4558-A6F5-F3043C9DE8E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49FD674E-C9C3-4558-A6F5-F3043C9DE8E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
