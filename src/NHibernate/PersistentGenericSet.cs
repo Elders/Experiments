@@ -699,9 +699,9 @@ namespace Sharetronix.Cfg.ForNHibernate
 
         #region Nested type: ISetSnapshot
 
-        private interface ISetSnapshot<T> : ICollection<T>, ICollection
+        private interface ISetSnapshot<Y> : ICollection<Y>, ICollection
         {
-            T this[T element] { get; }
+            Y this[Y element] { get; }
         }
 
         #endregion
@@ -709,28 +709,28 @@ namespace Sharetronix.Cfg.ForNHibernate
         #region Nested type: SetSnapShot
 
         [Serializable]
-        private class SetSnapShot<T> : ISetSnapshot<T>
+        private class SetSnapShot<V> : ISetSnapshot<V>
         {
-            private readonly List<T> elements;
+            private readonly List<V> elements;
 
             private SetSnapShot()
             {
-                elements = new List<T>();
+                elements = new List<V>();
             }
 
             public SetSnapShot(int capacity)
             {
-                elements = new List<T>(capacity);
+                elements = new List<V>(capacity);
             }
 
-            public SetSnapShot(IEnumerable<T> collection)
+            public SetSnapShot(IEnumerable<V> collection)
             {
-                elements = new List<T>(collection);
+                elements = new List<V>(collection);
             }
 
-            #region ISetSnapshot<T> Members
+            #region ISetSnapshot<V> Members
 
-            public IEnumerator<T> GetEnumerator()
+            public IEnumerator<V> GetEnumerator()
             {
                 return elements.GetEnumerator();
             }
@@ -740,7 +740,7 @@ namespace Sharetronix.Cfg.ForNHibernate
                 return GetEnumerator();
             }
 
-            public void Add(T item)
+            public void Add(V item)
             {
                 elements.Add(item);
             }
@@ -750,17 +750,17 @@ namespace Sharetronix.Cfg.ForNHibernate
                 throw new InvalidOperationException();
             }
 
-            public bool Contains(T item)
+            public bool Contains(V item)
             {
                 return elements.Contains(item);
             }
 
-            public void CopyTo(T[] array, int arrayIndex)
+            public void CopyTo(V[] array, int arrayIndex)
             {
                 elements.CopyTo(array, arrayIndex);
             }
 
-            public bool Remove(T item)
+            public bool Remove(V item)
             {
                 throw new InvalidOperationException();
             }
@@ -785,7 +785,7 @@ namespace Sharetronix.Cfg.ForNHibernate
                 get { return ((ICollection)elements).IsSynchronized; }
             }
 
-            int ICollection<T>.Count
+            int ICollection<V>.Count
             {
                 get { return elements.Count; }
             }
@@ -795,7 +795,7 @@ namespace Sharetronix.Cfg.ForNHibernate
                 get { return ((ICollection<T>)elements).IsReadOnly; }
             }
 
-            public T this[T element]
+            public V this[V element]
             {
                 get
                 {
@@ -804,7 +804,7 @@ namespace Sharetronix.Cfg.ForNHibernate
                     {
                         return elements[idx];
                     }
-                    return default(T);
+                    return default(V);
                 }
             }
 

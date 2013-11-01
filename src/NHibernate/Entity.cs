@@ -22,18 +22,18 @@ namespace NHibernateExperiments.DTOs
 
         protected virtual ISet<EntityItem> InternalItems { get; set; }
 
-        //public virtual IReadOnlyCollection<EntityItem> Items
-        //{
-        //    get
-        //    {
-        //        if (readonlyItems == null || readonlyItems.Count != InternalItems.Count)
-        //        {
-        //            readonlyItems = new ReadOnlyCollection<EntityItem>(InternalItems.ToList());
-        //        }
-        //        return readonlyItems;
-        //    }
+        public virtual IReadOnlyCollection<EntityItem> Items
+        {
+            get
+            {
+                if (readonlyItems == null || readonlyItems.Count != InternalItems.Count)
+                {
+                    readonlyItems = new ReadOnlyCollection<EntityItem>(InternalItems.ToList());
+                }
+                return readonlyItems;
+            }
 
-        //}
+        }
 
         public virtual bool AddItem(EntityItem item)
         {
