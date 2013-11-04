@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StatsdClient</name>
+    </assembly>
+    <members>
+        <member name="T:StatsdClient.ConnectionType">
+            <summary>
+            The network connection type
+            </summary>
+        </member>
+        <member name="F:StatsdClient.ConnectionType.Udp">
+            <summary>
+            Udp (recommended)
+            </summary>
+        </member>
+        <member name="F:StatsdClient.ConnectionType.Tcp">
+            <summary>
+            Tcp
+            </summary>
+        </member>
+        <member name="T:StatsdClient.IOutputChannel">
+            <summary>
+            Contract for sending raw statds lines to the server
+            </summary>
+        </member>
+        <member name="M:StatsdClient.IOutputChannel.Send(System.String)">
+            <summary>
+            Sends a line of stats data to the server.
+            </summary>
+        </member>
+        <member name="T:StatsdClient.IStatsd">
+            <summary>
+            Interface for the statsd.net client
+            </summary>
+        </member>
+        <member name="M:StatsdClient.IStatsd.LogCount(System.String,System.Int32)">
+            <summary>
+            Log a count for a metric
+            </summary>
+        </member>
+        <member name="M:StatsdClient.IStatsd.LogGauge(System.String,System.Int32)">
+            <summary>
+            Log a gauge value
+            </summary>
+        </member>
+        <member name="M:StatsdClient.IStatsd.LogTiming(System.String,System.Int32)">
+            <summary>
+            Log a latency / Timing
+            </summary>
+        </member>
+        <member name="M:StatsdClient.IStatsd.LogTiming(System.String,System.Int64)">
+            <summary>
+            Log a latency / Timing
+            </summary>
+        </member>
+        <member name="M:StatsdClient.IStatsd.LogSet(System.String,System.Int32)">
+            <summary>
+            Log the number of unique occurrances of something
+            </summary>
+            <param name="name"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:StatsdClient.IStatsd.LogRaw(System.String,System.Int32,System.Nullable{System.Int64})">
+            <summary>
+            Log a raw metric that will not get aggregated on the server.
+            </summary>
+            <param name="name">The metric name.</param>
+            <param name="value">The metric value.</param>
+            <param name="epoch">(optional) The epoch timestamp. Leave this blank to have the server assign an epoch for you.</param>
+        </member>
+        <member name="T:StatsdClient.MetricType">
+            <summary>
+            A list of metric types that statsd.net supports
+            </summary>
+        </member>
+        <member name="F:StatsdClient.MetricType.COUNT">
+            <summary>
+            The number of times something happened.
+            </summary>
+        </member>
+        <member name="F:StatsdClient.MetricType.TIMING">
+            <summary>
+            The time it took for something to happen.
+            </summary>
+        </member>
+        <member name="F:StatsdClient.MetricType.GAUGE">
+            <summary>
+            The value of some measurement at this very moment.
+            </summary>
+        </member>
+        <member name="F:StatsdClient.MetricType.SET">
+            <summary>
+            The number of times each event has been seen.
+            </summary>
+        </member>
+        <member name="F:StatsdClient.MetricType.RAW">
+            <summary>
+            A raw metric that won't be aggregated on the server.
+            </summary>
+        </member>
+        <member name="T:StatsdClient.StatsdExtensions">
+            <summary>
+            A set of extensions for building up metrics using dynamic objects.
+            </summary>
+        </member>
+        <member name="M:StatsdClient.StatsdExtensions.count(StatsdClient.IStatsd)">
+            <summary>
+            Start logging a count
+            </summary>
+        </member>
+        <member name="M:StatsdClient.StatsdExtensions.timing(StatsdClient.IStatsd)">
+            <summary>
+            Start logging a timing / latency
+            </summary>
+        </member>
+        <member name="M:StatsdClient.StatsdExtensions.gauge(StatsdClient.IStatsd)">
+            <summary>
+            Start logging a gauge
+            </summary>
+        </member>
+        <member name="M:StatsdClient.StatsdExtensions.set(StatsdClient.IStatsd)">
+            <summary>
+            Start logging a set
+            </summary>
+        </member>
+        <member name="T:StatsdClient.Statsd">
+            <summary>
+            The statsd client library.
+            </summary>
+        </member>
+        <member name="M:StatsdClient.Statsd.#ctor(System.String,System.Int32)">
+            <summary>
+            Creates a new instance of the Statsd client.
+            </summary>
+            <param name="host">The statsd or statsd.net server.</param>
+            <param name="port"></param>
+        </member>
+        <member name="M:StatsdClient.Statsd.#ctor(System.String,System.Int32,StatsdClient.ConnectionType,System.String,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+            Creates a new instance of the Statsd client.
+            </summary>
+            <param name="host">The statsd or statsd.net server.</param>
+            <param name="port"></param>
+            <param name="prefix">A string prefix to prepend to every metric.</param>
+            <param name="rethrowOnError">If True, rethrows any exceptions caught due to bad configuration.</param>
+            <param name="connectionType">Choose between a UDP (recommended) or TCP connection.</param>
+            <param name="retryOnDisconnect">Retry the connection if it fails (TCP only).</param>
+            <param name="retryAttempts">Number of times to retry before giving up (TCP only).</param>
+        </member>
+        <member name="M:StatsdClient.Statsd.#ctor(System.String,System.Int32,System.String,System.Boolean,StatsdClient.IOutputChannel)">
+            <summary>
+            Creates a new instance of the Statsd client.
+            </summary>
+            <param name="host">The statsd or statsd.net server.</param>
+            <param name="port"></param>
+            <param name="prefix">A string prefix to prepend to every metric.</param>
+            <param name="rethrowOnError">If True, rethrows any exceptions caught due to bad configuration.</param>
+            <param name="outputChannel">Optional output channel (useful for mocking / testing).</param>
+        </member>
+        <member name="M:StatsdClient.Statsd.LogCount(System.String,System.Int32)">
+            <summary>
+            Log a counter.
+            </summary>
+            <param name="name">The metric name.</param>
+            <param name="count">The counter value (defaults to 1).</param>
+        </member>
+        <member name="M:StatsdClient.Statsd.LogTiming(System.String,System.Int32)">
+            <summary>
+            Log a timing / latency
+            </summary>
+            <param name="name">The metric name.</param>
+            <param name="milliseconds">The duration, in milliseconds, for this metric.</param>
+        </member>
+        <member name="M:StatsdClient.Statsd.LogTiming(System.String,System.Int64)">
+            <summary>
+            Log a timing / latency
+            </summary>
+            <param name="name">The metric name.</param>
+            <param name="milliseconds">The duration, in milliseconds, for this metric.</param>
+        </member>
+        <member name="M:StatsdClient.Statsd.LogGauge(System.String,System.Int32)">
+            <summary>
+            Log a gauge.
+            </summary>
+            <param name="name">The metric name</param>
+            <param name="value">The value for this gauge</param>
+        </member>
+        <member name="M:StatsdClient.Statsd.LogSet(System.String,System.Int32)">
+            <summary>
+            Log to a set
+            </summary>
+            <param name="name">The metric name.</param>
+            <param name="value">The value to log.</param>
+            <remarks>Logging to a set is about counting the number
+            of occurrences of each event.</remarks>
+        </member>
+        <member name="M:StatsdClient.Statsd.LogRaw(System.String,System.Int32,System.Nullable{System.Int64})">
+            <summary>
+            Log a raw metric that will not get aggregated on the server.
+            </summary>
+            <param name="name">The metric name.</param>
+            <param name="value">The metric value.</param>
+            <param name="epoch">(optional) The epoch timestamp. Leave this blank to have the server assign an epoch for you.</param>
+        </member>
+        <member name="M:StatsdClient.Statsd.PrepareMetric(System.String,System.String,System.String,System.Int32,System.String)">
+            <summary>
+            Prepare a metric prior to sending it off ot the Graphite server.
+            </summary>
+            <param name="metricType"></param>
+            <param name="name"></param>
+            <param name="prefix"></param>
+            <param name="value"></param>
+            <param name="postFix">A value to append to the end of the line.</param>
+            <returns>The formatted metric</returns>
+        </member>
+        <member name="T:StatsdClientExtensions">
+            <summary>
+            A set of extensions for use with the StatsdClient library.
+            </summary>
+        </member>
+        <member name="M:StatsdClientExtensions.LogTiming(StatsdClient.IStatsd,System.String,System.TimeSpan)">
+            <summary>
+            Log a timing metric
+            </summary>
+            <param name="client">The statsd client instance.</param>
+            <param name="name">The namespace of the timing metric.</param>
+            <param name="duration">The duration to log (will be converted into milliseconds)</param>
+        </member>
+        <member name="M:StatsdClientExtensions.LogTiming(StatsdClient.IStatsd,System.String)">
+            <summary>
+            Starts a timing metric that will be logged when the TimingToken is disposed.
+            </summary>
+            <param name="client">The statsd clien instance.</param>
+            <param name="name">The namespace of the timing metric.</param>
+            <returns>A timing token that has been initialised with a start datetime.</returns>
+            <remarks>Wrap the code you want to measure in a using() {} block. The 
+            TimingToken instance will log the duration when it is disposed.</remarks>
+        </member>
+        <member name="T:StatsdClient.TimingToken">
+            <summary>
+            A class that is used to measure a latency wrapped in a using block.
+            </summary>
+        </member>
+        <member name="M:StatsdClient.TimingToken.Dispose">
+            <summary>
+            Stops the internal timer and logs a latency metric.
+            </summary>
+        </member>
+    </members>
+</doc>
