@@ -16,7 +16,7 @@ namespace StatsD
 
             while (true)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
                 Statsd.Current.LogCount("mynkow");
             }
 
