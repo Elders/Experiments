@@ -7,20 +7,23 @@ using System.Threading.Tasks;
 
 namespace NHibernateExperiments.DTOs
 {
-    public class Entity
+    public interface IQueryableItems
+    {
+        ISet<EntityItem> InternalItems { get; set; }
+    }
+
+    public class Entity : IQueryableItems
     {
         IReadOnlyCollection<EntityItem> readonlyItems;
         public Entity()
         {
-            InternalItems = new HashSet<EntityItem>();
+            qItems = new HashSet<EntityItem>();
             readonlyItems = null;
         }
 
         public virtual Guid Id { get; set; }
 
         public virtual string Name { get; set; }
-
-        protected virtual ISet<EntityItem> InternalItems { get; set; }
 
         //public virtual IReadOnlyCollection<EntityItem> Items
         //{
@@ -38,14 +41,18 @@ namespace NHibernateExperiments.DTOs
         public virtual bool AddItem(EntityItem item)
         {
             item.Parent = this;
-            return InternalItems.Add(item);
+            return qItems.Add(item);
         }
 
         public virtual bool RemoveItem(EntityItem item)
         {
             item.Parent = null;
-            return InternalItems.Remove(item);
+            return qItems.Remove(item);
         }
+
+        ISet<EntityItem> qItems;
+        ISet<EntityItem> IQueryableItems.InternalItems { get { return qItems; } set { qItems = value; } }
+
     }
 
     public class EntityItem : IEquatable<EntityItem>
