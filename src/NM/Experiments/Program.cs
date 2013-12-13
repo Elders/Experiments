@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -35,55 +36,36 @@ namespace Experiments
 
     class Program
     {
-
+        private const char cStringSeparator = '#';
         static void Main(string[] args)
         {
-            string asd = "sadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdgsadfsdg.";
+            var first = MeasureExecutionTime.Start(() =>
+            {
+                var type = typeof(Int32);
+                string name = type.Name;
+            }, 1000000);
+
             var second = MeasureExecutionTime.Start(() =>
             {
-                PrepareMetric2("R", "mycoolname", "mynkow", 10, "wtf");
-            }, 10000000);
-            var third = MeasureExecutionTime.Start(() =>
-            {
-                PrepareMetric3("R", "mycoolname", "mynkow", 10, "wtf");
-            }, 10000000);
+                var type = System.Type.GetType("System.Int32");
+                string name = type.Name;
+            }, 1000000);
 
-            // Console.WriteLine(first);
+            Console.WriteLine(first);
             Console.WriteLine(second);
-            Console.WriteLine(third);
-            //  Console.WriteLine(fourth);
             Console.ReadLine();
         }
+    }
 
-        static string PrepareMetric2(string metricType, string name, string prefix, int value, string postFix = null)
-        {
-            StringBuilder metricBuilder = new StringBuilder();
-            if (true)
-            {
-                metricBuilder.Append(prefix);
-                metricBuilder.Append(".");
-                metricBuilder.Append(name);
-            }
-            else
-            {
-                metricBuilder.Append(name);
-            }
-            metricBuilder.Append(":"); metricBuilder.Append(value);
-            metricBuilder.Append("|"); metricBuilder.Append(metricType);
-            if (postFix != null)
-            {
-                metricBuilder.Append("|"); metricBuilder.Append(postFix);
-            }
-            return metricBuilder.ToString();
-        }
 
-        static string PrepareMetric3(string metricType, string name, string prefix, int value, string postFix = null)
-        {
-            return (true ? (prefix + "." + name) : name)
-              + ":" + value
-              + "|" + metricType
-              + (postFix == null ? String.Empty : "|" + postFix);
-        }
+
+    public interface IMyClass
+    {
+        Guid EventId { get; set; }
+    }
+    public class MyClass : IMyClass
+    {
+        public Guid EventId { get; set; }
     }
 
     public static class MeasureExecutionTime

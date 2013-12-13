@@ -34,7 +34,7 @@ namespace log4net
             {
                 log.Error(ex.Message, ex);
             }
-            
+
         }
     }
 

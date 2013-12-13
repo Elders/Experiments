@@ -7,51 +7,49 @@ using System.Threading.Tasks;
 
 namespace NHibernateExperiments.DTOs
 {
-    public interface IQueryableItems
+    public class Entity
     {
-        ISet<EntityItem> InternalItems { get; set; }
-    }
-
-    public class Entity : IQueryableItems
-    {
-        IReadOnlyCollection<EntityItem> readonlyItems;
         public Entity()
         {
-            qItems = new HashSet<EntityItem>();
-            readonlyItems = null;
+            QueryableLogins = new HashSet<Guid>();
         }
 
         public virtual Guid Id { get; set; }
 
         public virtual string Name { get; set; }
 
-        //public virtual IReadOnlyCollection<EntityItem> Items
-        //{
-        //    get
-        //    {
-        //        if (readonlyItems == null || readonlyItems.Count != InternalItems.Count)
-        //        {
-        //            readonlyItems = new ReadOnlyCollection<EntityItem>(InternalItems.ToList());
-        //        }
-        //        return readonlyItems;
-        //    }
+        public virtual string Text { get; set; }
 
-        //}
+        protected virtual ISet<Guid> QueryableLogins { get; set; }
 
-        public virtual bool AddItem(EntityItem item)
+        IReadOnlyCollection<Guid> readonlyItems;
+        public virtual IReadOnlyCollection<Guid> Logins
         {
-            item.Parent = this;
-            return qItems.Add(item);
+            get
+            {
+                if (readonlyItems == null || readonlyItems.Count != QueryableLogins.Count)
+                {
+                    readonlyItems = new ReadOnlyCollection<Guid>(QueryableLogins.ToList());
+                }
+                return readonlyItems;
+            }
         }
 
-        public virtual bool RemoveItem(EntityItem item)
+        public virtual bool AddLoginStat(Guid loginStatId)
         {
-            item.Parent = null;
-            return qItems.Remove(item);
+            if (loginStatId == default(Guid))
+                return false;
+
+            return QueryableLogins.Add(loginStatId);
         }
 
-        ISet<EntityItem> qItems;
-        ISet<EntityItem> IQueryableItems.InternalItems { get { return qItems; } set { qItems = value; } }
+        public virtual bool RemoveLoginStat(Guid loginStatId)
+        {
+            if (loginStatId == default(Guid))
+                return false;
+
+            return QueryableLogins.Remove(loginStatId);
+        }
 
     }
 

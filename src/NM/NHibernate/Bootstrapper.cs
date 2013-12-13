@@ -30,7 +30,7 @@ namespace NHibernateExperiments
         {
             LoadConnectionStringAndDatabaseName();
 
-            DatabaseManager.DeleteDatabase(connectionString);
+            //DatabaseManager.DeleteDatabase(connectionString);
 
             isNewInstance = CreateDatabaseIfNotExists();
 
@@ -54,18 +54,12 @@ namespace NHibernateExperiments
         {
             modelMapper.Class<Entity>(mapper =>
             {
-                mapper.Set<EntityItem>("InternalItems", prmap =>
+                mapper.Property("QueryableLogins", prmap =>
                 {
-                    prmap.Cascade(Cascade.All.Include(Cascade.DeleteOrphans));
-                    prmap.Inverse(true);
+                    prmap.Type<GuidSetUserType>();
+                    prmap.Length(4001);
                 });
             });
-
-            //modelMapper.Class<Log>(mapper =>
-            //{
-            //    mapper.Property(pr => pr.Message, prmap => prmap.Length(4001));
-            //    mapper.Property(pr => pr.Exception, prmap => prmap.Length(4001));
-            //});
         };
 
         private static bool CreateDatabaseIfNotExists()
