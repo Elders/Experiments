@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MassTransit;
+using Heartbeat;
+using Heartbeat1;
 
 namespace MasstransitQueues
 {
@@ -12,39 +15,42 @@ namespace MasstransitQueues
     {//192.168.16.46
         static void Main(string[] args)
         {
-            var serviceBus = ServiceBusFactory.New(x =>
-                {
-                    x.ReceiveFrom("rabbitmq://guest:guest@localhost/Sender");
-                    x.UseRabbitMq();
-                    x.Subscribe(sbc => sbc.Consumer<Asd>().Permanent());
-                });
-            //for (int i = 0; i < 50; i++)
+            var myIp = GetMyIp();
+            //Heartbeat.Heartbeat heartBeat = new Heartbeat.Heartbeat();
+            //heartBeat.Configure(cfg =>
             //{
-            //    //  serviceBus.Publish(new mymsg() { Txt = "ad" });
-            //    //serviceBus.GetEndpoint(new Uri("rabbitmq://guest:guest@192.168.16.46/Sender")).Receive(x => 
-            //    {
-            //        //serviceBus.ser
-            //       .. return y => y.BodyStream;
-            //    });//.Send(new mymsg() { Txt = "ad" });
-            //}
+            //    cfg.SetCurrrentLocalRabbitMQEndpoint("guest", "guest", myIp, "Backup");
+            //    //   cfg.SetRemoteHeartbeatEndpoint("guest", "guest", myIp, "Heartbeat");
+            //    cfg.SetHeartbeatInterval(new TimeSpan(0, 0, 5));
+            //    cfg.SetHeartbeatTolerance(new TimeSpan(0, 0, 10));
 
-            Thread.Sleep(4000);
+            //});
+            //heartBeat.OnDead += () => Console.WriteLine("Dead");
+            //heartBeat.OnResurrect += () => Console.WriteLine("Resurected");
+            //heartBeat.Start();
+            IStatelessHeartbeat statelessHeartbeat2 = new StatelessRabbitMQHeartbeat(cfg =>
+            {
+                cfg.SetPulseTimeoutTolerance(new TimeSpan(0, 0, 10));
+                cfg.SetCurrrentLocalRabbitMQEndpoint("guest", "guest", myIp, "StatelessPulse2");
+            });
 
             Console.ReadLine();
+
         }
-    }
 
-    public class mymsg
-    {
-        public string Txt { get; set; }
-    }
-
-    public class Asd : Consumes<mymsg>.All
-    {
-
-        public void Consume(mymsg message)
+        public static string GetMyIp()
         {
-            Console.WriteLine(message.Txt);
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            return localIP;
         }
     }
 }

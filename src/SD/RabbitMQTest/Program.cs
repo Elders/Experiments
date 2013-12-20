@@ -1,241 +1,182 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Protoreg;
+using NMSD.Cronus.Core.Multithreading.Work;
 using RabbitMQ.Client;
-using RabbitMQTest.Cronus.Core.Eventing;
-using RabbitMQTest.LaCore.Hyperion.Infrastructure;
+using RabbitMQ.Client.Framing.v0_9_1;
+
 
 namespace RabbitMQTest
 {
     class Program
     {
+        public static string QueueNameOne = "SpeedTextQueue";
+        public static string ExchangeName = "SpeedTestExchange";
         static void Main(string[] args)
         {
-            var reg = new ProtoRegistration();
-            reg.RegisterAssembly<TestMessage>();
-            var serializer = new ProtoregSerializer(reg);
-            serializer.Build();
-
-
-
-            Thread trd = new Thread(new ThreadStart(() =>
+            ConnectionFactory factory = new ConnectionFactory
             {
-                using (var queue = new PersistentQueue<IEvent>("test-persistent-queue", serializer))
-                {
-                    while (true)
-                    {
+                HostName = "192.168.16.53",
+                Port = 5672,
+                UserName = "guest",
+                Password = "guest",
+                VirtualHost = "/"
+            };
 
-                        IEvent result;
-                        if (queue.TryGetEvent(out result))
-                        {
-                            Console.WriteLine((result as TestMessage).TestString);
-                            queue.Acknowlidge(result);
-                        }
-                    }
-                }
-            }));
-            trd.Start();
-
-            Thread trdPub = new Thread(new ThreadStart(() =>
+            var pubConnection = factory.CreateConnection();
+            var consumeConnection = factory.CreateConnection();
+            using (var channel = pubConnection.CreateModel())
             {
-                var queuePub = new PersistentQueue<IEvent>("test-persistent-queue", serializer);
-
-                int i = 0;
-                while (true)
-                {
-                    string msgString = (i++).ToString();
-                    if (String.IsNullOrEmpty(msgString))
-                        continue;
-                    if (msgString == "exit")
-                        break;
-                    var msg = new TestMessage(msgString);
-                    queuePub.Enqueue(msg);
-
-                } queuePub.Dispose();
-            }));
-            trdPub.Start();
-
-            Console.ReadLine();
-            //var connectionFactory = new ConnectionFactory();
-            //IConnection connection = connectionFactory.CreateConnection();
-            //byte[] message = Encoding.UTF8.GetBytes("Test Message");
-
-            //var start = DateTime.Now;
-            //IModel channel = connection.CreateModel();
-            //for (int i = 0; i < 8000; i++)
+                channel.ExchangeDeclare(ExchangeName, ExchangeType.Headers, false, false, null);
+                //Dictionary<string, object> headers = null;
+                Dictionary<string, object> headers = new Dictionary<string, object>();
+                headers["asd"] = "asd";
+                channel.QueueDeclare(QueueNameOne, true, false, false, headers);
+                channel.QueueBind(QueueNameOne, ExchangeName, String.Empty, headers);
+                //channel.QueueDeclare(QueueNameTwo, true, false, false, null);
+                //channel.QueueBind(QueueNameTwo, ExchangeName, String.Empty);
+            }
+            var pool = new WorkPool("MyPoool", 5);
+            for (int i = 0; i < 5; i++)
+            {
+                pool.AddWork(new Consumer(factory.CreateConnection()));
+            }
+            pool.StartCrawlers();
+            //for (int i = 0; i < 5; i++)
             //{
+            //    Task.Factory.StartNew(() =>
+            //    {
+            //        using (var channel = consumeConnection.CreateModel())
+            //        {
 
-            //    //PublicationAddress adress = new PublicationAddress(string.Empty, null, "test-queue");
-
-            //    //  channel.BasicPublish(adress, null, message);
-            //    var queue = channel.QueueDeclare("test-queue", true, false, false, null);
-            //    var result = channel.BasicGet("test-queue", false);
-
-            //    //  channel.BasicAck(result.DeliveryTag, false);
-
+            //            var consumer = new QueueingBasicConsumer(channel);
+            //            channel.BasicConsume(QueueNameOne, true, consumer);
+            //            while (true)
+            //            {
+            //                consumer.Queue.Dequeue();
+            //            }
+            //        }
+            //    });
 
             //}
-            //channel.Close();
-            //var end = DateTime.Now; Console.WriteLine(end - start);
-
-            //connection.Close();
-
-            //Console.ReadLine();
-        }
-
-
-
-    }
-    [DataContract(Name = "1ed4f3c5-5fff-4289-94f5-a5cfd9379734")]
-    public class TestMessage : IEvent
-    {
-        public TestMessage() { }
-        public TestMessage(string testString)
-        {
-            TestString = testString;
-        }
-        [DataMember(Order = 1)]
-        public string TestString { get; set; }
-    }
-
-    namespace Cronus.Core.Eventing
-    {
-        public interface IEvent
-        { }
-
-    }
-    namespace LaCore.Hyperion.Infrastructure
-    {
-        public class PersistentQueue<T> : IDisposable
-            where T : class
-        {
-            public const string CrojectionsQueueFormatName = "rabbitmq://localhost/Hyperion-{0}-Projections";
-            private IConnection connection;
-            private ConnectionFactory connectionFactory;
-            private IModel errorChannel;
-            private QueueDeclareOk queue;
-            private readonly string queueName;
-            private readonly string errorQueueName;
-            private ConcurrentQueue<T> readQueue = new ConcurrentQueue<T>();
-            private Dictionary<T, BasicGetResult> results = new Dictionary<T, BasicGetResult>();
-            private IModel channel;
-            private readonly ProtoregSerializer serializer;
-
-            public PersistentQueue(string name, ProtoregSerializer serializer)
+            for (int i = 0; i < 2; i++)
             {
-                this.serializer = serializer;
-                if (connection == null)
+                var message = BuildBytes(200);
+                Task.Factory.StartNew(() =>
                 {
-                    if (connectionFactory == null)
+                    using (var channel = pubConnection.CreateModel())
                     {
-                        connectionFactory = new ConnectionFactory();
-                        connection = connectionFactory.CreateConnection();
+                        IBasicProperties props = new BasicProperties();
+                        props.SetPersistent(true);
+                        props.Priority = 9;
+                        props.Headers = new Dictionary<string, object>() { { "asd", "asd" } };
+                        while (true)
+                        {
+                            for (int j = 0; j < 100; j++)
+                            {
+                                channel.BasicPublish(ExchangeName, string.Empty, false, false, props, message);
+                            }
+                        }
                     }
-                }
-                this.queueName = name;
-                this.errorQueueName = name + "_error";
-                channel = connection.CreateModel();
-                queue = channel.QueueDeclare(queueName, true, false, false, null);
-                errorChannel = connection.CreateModel();
-                errorChannel.QueueDeclare(errorQueueName, true, false, false, null);
+                });
             }
 
-            public void Acknowlidge(T item)
-            {
-                channel.BasicAck(results[item].DeliveryTag, false);
-                results.Remove(item);
-            }
+        }
 
-            public void AcknowlidgeRange(IEnumerable<T> items)
+        static byte[] BuildBytes(int numberofByets)
+        {
+            var bytes = new byte[numberofByets];
+            for (int i = 0; i < numberofByets; i++)
             {
-                foreach (var item in items)
+                bytes[i] = 32;
+            }
+            return bytes;
+        }
+
+    }
+    public class Consumer : IWork
+    {
+
+        public DateTime ScheduledStart { get; private set; }
+        public IConnection ConsumeConnection { get; private set; }
+        public Consumer(IConnection consumeConnection)
+        {
+            ConsumeConnection = consumeConnection;
+        }
+        public void Start()
+        {
+            using (var channel = ConsumeConnection.CreateModel())
+            {
+
+                var consumer = new QueueingBasicConsumer();
+                channel.BasicConsume(Program.QueueNameOne, false, consumer);
+                while (true)
                 {
-                    Acknowlidge(item);
-                }
-            }
-
-            public T Dequeue()
-            {
-                var result = channel.BasicGet(queueName, false);
-                if (result == null)
-                    return null;
-                var str = new MemoryStream(result.Body);
-                str.Position = 0;
-                if (result == null || result.Body == null || result.Body.Length == 0)
-                    return null;
-                object item = null; ;
-                try
-                {
-                    throw new Exception();
-                    item = serializer.Deserialize(str);
-                }
-                catch (Exception ex)
-                {
-                    errorChannel.BasicPublish(String.Empty, errorQueueName, null, result.Body);
-                    channel.BasicAck(result.DeliveryTag, false);
-                    //  throw ex;
-                    return null;
-                }
-                results.Add((T)item, result);
-                return (T)item;
-            }
-
-            public void Enqueue(T item)
-            {
-                var str = new MemoryStream();
-                serializer.Serialize(str, item);
-                channel.BasicPublish(String.Empty, queueName, null, str.ToArray());
-            }
-
-            public void Dispose()
-            {
-                if (channel != null)
-                {
-                    channel.Close();
-                    channel = null;
-                }
-                if (connection != null)
-                {
-                    connection.Close();
-                    connection = null;
-                }
-            }
-
-            public bool TryGetEvent(out Cronus.Core.Eventing.IEvent @event)
-            {
-
-                @event = Dequeue() as IEvent;
-                if (@event == null)
-                    return false;
-                return true;
-            }
-
-            public bool IsEmpty
-            {
-                get
-                {
-                    return queue.MessageCount == 0;
-                }
-            }
-
-            public int Count
-            {
-                get
-                {
-                    if (queue.MessageCount > int.MaxValue)
-                        return int.MaxValue;
-                    else
-                        return (int)queue.MessageCount;
+                    var msg = consumer.Queue.DequeueNoWait(null);
+                    if (msg != null)
+                        channel.BasicAck(msg.DeliveryTag, false);
                 }
             }
         }
     }
+
+    public static class MeasureExecutionTime
+    {
+        public static string Start(Action action)
+        {
+            string result = string.Empty;
+
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            action();
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            result = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
+            return result;
+        }
+
+        public static string Start(Action action, int repeat)
+        {
+            string result = string.Empty;
+
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            for (int i = 0; i <= repeat; i++)
+            {
+                action();
+            }
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            result = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
+            return result;
+        }
+
+        public static string Start(Action<int> action, int repeat)
+        {
+            string result = string.Empty;
+
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            for (int i = 0; i <= repeat; i++)
+            {
+                action(i);
+            }
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            result = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
+            return result;
+        }
+    }
+
 
 }

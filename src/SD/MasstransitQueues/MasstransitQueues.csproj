@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Heartbeat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Heartbeat1\bin\Debug\Heartbeat.exe</HintPath>
+    </Reference>
     <Reference Include="MassTransit">
       <HintPath>..\Lib\MassTransit\MassTransit.dll</HintPath>
     </Reference>
