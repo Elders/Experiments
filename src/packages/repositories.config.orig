@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<repositories>
+<<<<<<< HEAD
+  <repository path="..\NM\ConditionalCompilationSymbols\packages.config" />
+  <repository path="..\NM\DelMe\packages.config" />
+=======
+  <repository path="..\ProtoregDebugTest\packages.config" />
+  <repository path="..\SD\RabbitMQTest\packages.config" />
+>>>>>>> Stuff
+  <repository path="..\WEBSecurity\packages.config" />
+</repositories>

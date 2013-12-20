@@ -22,6 +22,15 @@ namespace DynamicVsLambda
         public bool Handle(Event5 x) { return true; }
         public bool Handle(Event6 x) { return true; }
     }
+    public class Handler2
+    {
+        public bool Handle(Event1 x) { return true; }
+        public bool Handle(Event2 x) { return true; }
+        public bool Handle(Event3 x) { return true; }
+        public bool Handle(Event4 x) { return true; }
+        public bool Handle(Event5 x) { return true; }
+        public bool Handle(Event6 x) { return true; }
+    }
 
     class Program
     {
